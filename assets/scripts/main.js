@@ -116,7 +116,7 @@ function createRecipeCards() {
   // Part 1 Expose - TODO
   console.log(recipeData);
   console.log(Object.keys(recipeData).length);
-  for(let i = 0, len = 3; i < len; i++)
+  for(let i = 0; i < 3; i++)
   {
     //const objectSymbols = Object.getOwnPropertyNames(recipeData[i]);
     console.log(recipeData[i]);
@@ -129,6 +129,7 @@ function createRecipeCards() {
     recipeData[i].then(new_data =>temp.data = new_data);
     document.querySelector("main").appendChild(temp);
   }
+  
 
  
 }
@@ -147,23 +148,25 @@ function bindShowMore() {
   function shows(){
     if( btn.innerHTML === "Show Less"){
       btn.innerHTML = "Show more";
+      document.querySelectorAll("recipe-card")[3].remove();
+      document.querySelectorAll("recipe-card")[3].remove();
+      document.querySelectorAll("recipe-card")[3].remove();
 
-      for(let i = 3 ; i < 6; i ++ ){
-      const temp = document.createElement("recipe-card");
-      console.log("Before temp.data");
-      recipeData[i].then(new_data =>temp.data = new_data);
-      document.querySelector("main").appendChild(temp);
-
-      }
+      
 
     }
 
     else if(btn.innerHTML === "Show more")
     {
       btn.innerHTML = "Show Less";
-      document.querySelectorAll("recipe-card")[3].remove();
-      document.querySelectorAll("recipe-card")[3].remove();
-      document.querySelectorAll("recipe-card")[3].remove();
+      for(let i = 3 ; i < 6; i ++ ){
+        const temp = document.createElement("recipe-card");
+        console.log("Before temp.data");
+        recipeData[i].then(new_data =>temp.data = new_data);
+        document.querySelector("main").appendChild(temp);
+  
+        }
+
 
 
   }
