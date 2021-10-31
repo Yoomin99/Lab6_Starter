@@ -1,7 +1,8 @@
 class RecipeCard extends HTMLElement {
   constructor() {
     // Part 1 Expose - TODO
-
+    super();
+    this.root = this.attachShadow({mode:"open"});
     // You'll want to attach the shadow DOM here
   }
 
@@ -84,10 +85,9 @@ class RecipeCard extends HTMLElement {
       }
     `;
     styleElem.innerHTML = styles;
-
     // Here's the root element that you'll want to attach all of your other elements to
     const card = document.createElement('article');
-
+    
     // Some functions that will be helpful here:
     //    document.createElement()
     //    document.querySelector()
@@ -100,6 +100,118 @@ class RecipeCard extends HTMLElement {
     // created in the constructor()
 
     // Part 1 Expose - TODO
+    //console.log(typeof data); // data is object
+    console.log(data);
+    this.shadowRoot.appendChild(styleElem);
+    //let new_version_data = await data.then;
+    //console.log(new_version_data);
+
+    //<img src="https://link-to-article.com/recipe-thumbnail.jpg" alt="Recipe Title">
+    const img = document.createElement("img");
+    img.setAttribute('src',searchForKey(data,"thumbnailUrl"));
+    //img.src = searchForKey(data,"thumbnailUrl");
+    //console.log( searchForKey(data,"headline"));
+    img.setAttribute('alt', searchForKey(data,"headline"));
+    card.appendChild(img);
+
+  //<p class="title">
+  //<a href="https://link-to-article.com">Title</a>
+  // </p>
+
+    const P = document.createElement("p");
+    P.classList.add("title");
+    var textnode = document.createTextNode(searchForKey(data,"headline"));
+    const A = document.createElement("a");
+    A.appendChild(textnode);
+    //A.href = getUrl(data);
+    A.setAttribute('href', getUrl(data));
+    P.appendChild(A);
+    card.appendChild(P);
+
+  //<p class="organization">The Chef's Organization</p>
+
+    const P1 = document.createElement("p");
+    P1.classList.add("organization")
+    var textnode = document.createTextNode(getOrganization(data));
+    P1.append(textnode);
+    card.appendChild(P1);
+    
+
+  //  <div class="rating">
+  //<!-- Average Review out of 5 -->
+  //<span>5</span>
+  //<!-- Corresponding image to avg review score -->
+  //<img src="/assets/images/icons/5-star.svg" alt="5 stars">
+  //<!-- Total number of reviews -->
+  //<span>(500)</span>
+//</div>
+
+    const div = document.createElement("div");
+    div.classList.add("rating");
+    const SPAN = document.createElement("span");
+
+    if(searchForKey(data,"ratingValue"))
+    {
+      console.log("inside of the if statement");
+      let value = searchForKey(data,"ratingValue");
+      var textnode = document.createTextNode(value);
+      console.log(typeof value); //string
+      console.log(Math.round(value));
+      value = Math.round(value);
+      value = value.toString();
+      //console.log(typeof toString(value));
+      
+      SPAN.appendChild(textnode);
+      div.appendChild(SPAN);
+      const IMG = document.createElement("img");
+      IMG.setAttribute('src',"assets/images/icons/"+ value + "-star.svg");
+      //IMG.src = "assets/images/icons/"+ value + "-star.svg";
+      //IMG.alt = Math.round(textnode) + "starts";
+      IMG.setAttribute('alt', value + "starts" );
+      div.appendChild(IMG);
+      const SPAN1 = document.createElement("span");
+      var textnode = document.createTextNode("(" + searchForKey(data,"ratingCount") + ")");
+      SPAN1.appendChild(textnode);
+      div.appendChild(SPAN1);
+    }
+    else{
+      var textnode = document.createTextNode("No Reviews");
+      SPAN.appendChild(textnode);
+      div.appendChild(SPAN);
+      const IMG = document.createElement("img");
+    }
+    card.appendChild(div);
+
+
+    //<time>50 min</time>
+
+    const duration = document.createElement("time");
+    var textnode = document.createTextNode(convertTime(searchForKey(data,"totalTime")));
+    duration.appendChild(textnode);
+    card.appendChild(duration);
+
+//<p class="ingredients">
+//Comma, Separated, List, of, Ingredients
+//</p>
+
+    const ingredients = document.createElement("p");
+    ingredients.classList.add("ingredients");
+    
+
+    console.log(searchForKey(data,"recipeIngredient")); // array
+    const ingredients_list = createIngredientList(searchForKey(data,"recipeIngredient"));
+
+    console.log(ingredients_list);
+    var textnode = document.createTextNode(ingredients_list);
+    ingredients.appendChild(textnode);
+
+    card.appendChild(ingredients);
+    //this.shadowRoot.appendChild(styleElem);
+
+    this.shadowRoot.appendChild(card);
+    //this.shadowRoot.appendChild(article);
+    
+
   }
 }
 

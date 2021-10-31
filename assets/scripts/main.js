@@ -15,16 +15,23 @@ const recipeData = {}
 
 window.addEventListener('DOMContentLoaded', init);
 
+
+// fetch('https://introweb.tech/assets/json/ghostCookies.json')
+//   .then(res => res.json())
+//   .then(data => console.log(data))
+
 // This is the first function to be called, so when you are tracing your code start here.
 async function init() {
   // fetch the recipes and wait for them to load
+  
   let fetchSuccessful = await fetchRecipes();
-  // if they didn't successfully load, quit the function
+  //if they didn't successfully load, quit the function
   if (!fetchSuccessful) {
     console.log('Recipe fetch unsuccessful');
     return;
   };
-  // Add the first three recipe cards to the page
+  
+  //Add the first three recipe cards to the page
   createRecipeCards();
   // Make the "Show more" button functional
   bindShowMore();
@@ -43,17 +50,81 @@ async function fetchRecipes() {
     // in the recipes folder and fetch them from there. You'll need to add their paths to the recipes array.
 
     // Part 1 Expose - TODO
+    //let size = 0;
+    for(let i = 0, len = recipes.length; i < len; i ++ )
+    {
+      fetch(recipes[i])
+      .then((Response)=>{
+        recipeData[i] = Response.json();
+        //data.then((new_data) => recipeData[i] = new_data );
+          console.log(recipeData[i]);
+          console.log(Response.status); // 200 
+          //recipeData[i] = result;
+          //resolve(true);
+      })
+
+      // .then(()=>{
+      //   let size = 0;
+  
+      //   for(key in recipeData){
+      //     if(recipeData.hasOwnProperty(key)) size++;
+      //   }
+      //   if(size == recipes.length){
+      //     resolve(true);
+      //   }
+      // })
+  
+      // .then(() => {
+      //   if(i == recipes.length && Object.keys(recipeData).length == recipes.length){
+      //     resolve(true);
+      // }
+      // })
+
+      .then(() => {
+        if(Object.keys(recipeData).length == recipes.length){
+          resolve(true);
+      }
+      })
+  
+  
+      .catch((error) => {
+         reject(false);
+      });
+    }
+    // if(Object.keys(recipeData).length == recipes.length){
+    //   resolve(true);
+  // }
+
+
+
   });
+  //console.log(recipeData)
 }
 
+  
 function createRecipeCards() {
   // This function is called for you up above.
   // From within this function you can access the recipe data from the JSON 
   // files with the recipeData Object above. Make sure you only display the 
   // three recipes we give you, you'll use the bindShowMore() function to
   // show any others you've added when the user clicks on the "Show more" button.
-
+ 
   // Part 1 Expose - TODO
+  console.log(recipeData);
+  console.log(Object.keys(recipeData).length);
+  for(let i = 0, len = Object.keys(recipeData).length; i < len; i++)
+  {
+    //const objectSymbols = Object.getOwnPropertyNames(recipeData[i]);
+    console.log(recipeData[i]);
+    const temp = document.createElement("recipe-card");
+    //var textnode = document.createTextNode(recipeData[i]);
+    //temp.appendChild(textnode);
+    
+    console.log("Before temp.data");
+    //temp.data = recipeData[i];
+    recipeData[i].then(new_data =>temp.data = new_data);
+    document.querySelector("main").appendChild(temp);
+  }
 }
 
 function bindShowMore() {
